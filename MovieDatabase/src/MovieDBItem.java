@@ -25,8 +25,12 @@ public class MovieDBItem implements Comparable<MovieDBItem> {
 
     @Override
     public int compareTo(MovieDBItem other) {
-        // TODO delete the line below and implement this method
-        throw new UnsupportedOperationException();
+        // TODO delete the line below and implement this method...done
+        int gncompare = this.genre.compareTo(other.getGenre());
+        int ttcompare = this.title.compareTo(other.getTitle());
+        if(gncompare != 0)
+            return gncompare;
+        else return ttcompare;
     }
 
     @Override
