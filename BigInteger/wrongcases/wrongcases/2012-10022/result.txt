@@ -1,0 +1,205 @@
+Case 1: Accepted
+Case 2: Accepted
+Case 3: Accepted
+Case 4: Accepted
+Case 5: Accepted
+Case 6: Accepted
+Case 7: Accepted
+Case 8: Accepted
+Case 9: Accepted
+Case 10: Accepted
+Case 11: Accepted
+Case 12: Accepted
+Case 13: Accepted
+Case 14: Accepted
+Case 15: Accepted
+Case 16: Accepted
+Case 17: Accepted
+Case 18: Accepted
+Case 19: Accepted
+Case 20: Accepted
+Case 21: Accepted
+Case 22: Wrong answer
+
+
+--- Expected output ---
+
+0
+0
+0
+
+
+--- Your output ---
+
+-0
+0
+-0
+
+Case 23: Wrong answer
+
+
+--- Expected output ---
+
+0
+0
+0
+
+
+--- Your output ---
+
+-0
+0
+-0
+
+Case 24: Wrong answer
+
+
+--- Expected output ---
+
+0
+0
+0
+
+
+--- Your output ---
+
+0
+0
+-0
+
+Case 25: Accepted
+Case 26: Wrong answer
+
+
+--- Expected output ---
+
+0
+0
+0
+
+
+--- Your output ---
+
+0
+-0
+0
+
+Case 27: Wrong answer
+
+
+--- Expected output ---
+
+0
+0
+0
+
+
+--- Your output ---
+
+-0
+0
+0
+
+Case 28: Wrong answer
+
+
+--- Expected output ---
+
+0
+0
+0
+
+
+--- Your output ---
+
+-0
+0
+0
+
+Case 29: Accepted
+Case 30: Wrong answer
+
+
+--- Expected output ---
+
+0
+0
+0
+
+
+--- Your output ---
+
+0
+0
+-0
+
+Case 31: Accepted
+Case 32: Accepted
+Case 33: Accepted
+Case 34: Accepted
+Case 35: Accepted
+Case 36: Accepted
+Case 37: Accepted
+Case 38: Accepted
+Case 39: Accepted
+Case 40: Accepted
+Case 41: Accepted
+Case 42: Accepted
+Case 43: Accepted
+Case 44: Accepted
+Case 45: Accepted
+Case 46: Accepted
+Case 47: Accepted
+Case 48: Accepted
+Case 49: Accepted
+Case 50: Accepted
+Case 51: Accepted
+Case 52: Accepted
+Case 53: Accepted
+Case 54: Accepted
+Case 55: Accepted
+Case 56: Accepted
+Case 57: Accepted
+Case 58: Accepted
+Case 59: Accepted
+Case 60: Accepted
+Case 61: Accepted
+Case 62: Accepted
+Case 63: Accepted
+Case 64: Accepted
+Case 65: Accepted
+Case 66: Accepted
+Case 67: Accepted
+Case 68: Accepted
+Case 69: Accepted
+Case 70: Accepted
+Case 71: Accepted
+Case 72: Accepted
+Case 73: Accepted
+Case 74: Accepted
+Case 75: Accepted
+Case 76: Accepted
+Case 77: Accepted
+Case 78: Accepted
+Case 79: Accepted
+Case 80: Accepted
+Case 81: Accepted
+Case 82: Accepted
+Case 83: Accepted
+Case 84: Accepted
+Case 85: Accepted
+Case 86: Accepted
+Case 87: Accepted
+Case 88: Accepted
+Case 89: Accepted
+Case 90: Accepted
+Case 91: Accepted
+Case 92: Accepted
+Case 93: Accepted
+Case 94: Accepted
+Case 95: Accepted
+Case 96: Accepted
+Case 97: Accepted
+Case 98: Accepted
+Case 99: Accepted
+Case 100: Accepted

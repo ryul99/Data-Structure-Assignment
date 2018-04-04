@@ -10,8 +10,7 @@ import java.util.NoSuchElementException;
 public class MovieDB {
     public MovieDB() {
         // FIXME implement this
-    	
-    	// HINT: MovieDBGenre 클래스를 정렬된 상태로 유지하기 위한 
+    	// HINT: MovieDBGenre 클래스를 정렬된 상태로 유지하기 위한
     	// MyLinkedList 타입의 멤버 변수를 초기화 한다.
     }
 
@@ -77,7 +76,7 @@ public class MovieDB {
 class Genre extends Node<String> implements Comparable<Genre> {
 	public Genre(String name) {
 		super(name);
-		throw new UnsupportedOperationException("not implemented yet");
+		//throw new UnsupportedOperationException("not implemented yet");
 	}
 	
 	@Override
@@ -96,10 +95,15 @@ class Genre extends Node<String> implements Comparable<Genre> {
 	}
 }
 
-class MovieList implements ListInterface<String> {	
-	public MovieList() {
+class MovieList implements ListInterface<String> {
+	Node<String> Head;
+	int numItem;
+    String genre;
+	public MovieList(String o) {
+        genre = o;
+	    Head = new Genre(o);
+	    Head.setNext(null);
 	}
-
 	@Override
 	public Iterator<String> iterator() {
 		throw new UnsupportedOperationException("not implemented yet");
@@ -107,17 +111,23 @@ class MovieList implements ListInterface<String> {
 
 	@Override
 	public boolean isEmpty() {
-		throw new UnsupportedOperationException("not implemented yet");
+		return Head.getNext() == null;
+	    //throw new UnsupportedOperationException("not implemented yet");
 	}
 
 	@Override
 	public int size() {
-		throw new UnsupportedOperationException("not implemented yet");
+		return numItem;
+	    //throw new UnsupportedOperationException("not implemented yet");
 	}
 
 	@Override
 	public void add(String item) {
-		throw new UnsupportedOperationException("not implemented yet");
+	    Node<String> addItem = new Node<>(item); // 왜 <String>과 <> 생략해도 무관?
+	    Node curr = Head;
+		while(curr.getNext() == null)
+        curr.setNext(addItem);
+	    //throw new UnsupportedOperationException("not implemented yet");
 	}
 
 	@Override
