@@ -9,6 +9,7 @@ public class MyLinkedList<T> implements ListInterface<T> {
 
 	public MyLinkedList() {
 		head = new Node<T>(null);
+		numItems = 0;//really need?
 	}
 
     /**
@@ -52,7 +53,20 @@ public class MyLinkedList<T> implements ListInterface<T> {
 		}
 		last.insertNext(item);
 		numItems += 1;
+		return;
 	}
+
+	public void putGenre(MovieList lst, Node<MovieList> in){
+		Node<MovieList> currNext = in.getNext();
+		Node<MovieList> ne = new Node<MovieList>(lst, currNext);
+		in.setNext(ne);
+		numItems += 1;
+		return;
+	}
+
+	public Node<T> Head(){
+	    return head;
+    }
 
 	@Override
 	public void removeAll() {
@@ -61,7 +75,7 @@ public class MyLinkedList<T> implements ListInterface<T> {
 }
 
 class MyLinkedListIterator<T> implements Iterator<T> {
-	// FIXME implement this...need?
+	// FIXME implement this...done
 	// Implement the iterator for MyLinkedList.
 	// You have to maintain the current position of the iterator.
 	private MyLinkedList<T> list;
@@ -100,5 +114,10 @@ class MyLinkedListIterator<T> implements Iterator<T> {
 		list.numItems -= 1;
 		curr = prev;
 		prev = null;
+		return;
+	}
+
+	public Node<T> getCurr() {
+		return curr;
 	}
 }
