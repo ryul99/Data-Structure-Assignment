@@ -310,5 +310,4 @@ class MovieListIterator implements Iterator<String> {
         prev = null;
         return;
     }
-
 }
