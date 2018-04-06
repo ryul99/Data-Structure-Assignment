@@ -182,7 +182,11 @@ class Genre extends Node<String> implements Comparable<Genre> {
 
     @Override
     public int hashCode() {
-        throw new UnsupportedOperationException("not implemented yet");
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((getItem() == null) ? 0 : getItem().hashCode());
+        return result;
+        //throw new UnsupportedOperationException("not implemented yet");
     }
 
     @Override
