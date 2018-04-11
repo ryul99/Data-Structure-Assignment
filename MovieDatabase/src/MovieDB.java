@@ -22,7 +22,7 @@ public class MovieDB {
         String gen = item.getGenre();
         String tit = item.getTitle();
         Genre genNode = new Genre(gen);
-        Node<MovieList> previous = list.head;
+        Node<MovieList> previous = list.Head();
         if (list.isEmpty()) {
             MovieList mv = new MovieList(genNode);
             mv.add(tit);
@@ -107,7 +107,7 @@ public class MovieDB {
         for (MyLinkedListIterator<MovieList> lst = new MyLinkedListIterator<>(list); lst.hasNext(); ) {
             curmovlist = lst.next();
             if (!curmovlist.isEmpty()) {
-                String gen = curmovlist.head.getItem();
+                String gen = curmovlist.Head().getItem();
                 String searIte = null;
                 for (MovieListIterator ite = new MovieListIterator(curmovlist); ite.hasNext(); ) {
                     searIte = ite.next();
@@ -155,7 +155,7 @@ public class MovieDB {
             for (MyLinkedListIterator<MovieList> lst = new MyLinkedListIterator<>(list); lst.hasNext();) {
                 curmovlist = lst.next();
                 if (!curmovlist.isEmpty()) {
-                    String gen = curmovlist.head.getItem();
+                    String gen = curmovlist.Head().getItem();
                     String searIte = null;
                     for (MovieListIterator ite = new MovieListIterator(curmovlist); ite.hasNext();) {
                         searIte = ite.next();
@@ -282,7 +282,7 @@ class MovieListIterator implements Iterator<String> {
 
     public MovieListIterator(MovieList list) {
         this.list = list;
-        this.curr = list.head;
+        this.curr = list.Head();
         this.prev = null;
     }
 
