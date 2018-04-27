@@ -23,7 +23,7 @@ public class MovieDB {
         String tit = item.getTitle();
         Genre genNode = new Genre(gen);
         Node<MovieList> previous = list.Head();
-        if (list.isEmpty()) {
+        if (list.isEmpty()) {//if mvDB is empty, make first movielist
             MovieList mv = new MovieList(genNode);
             mv.add(tit);
             list.putGenre(mv, previous);
@@ -33,13 +33,13 @@ public class MovieDB {
             // FIXME implement this...done
             // Insert the given item to the MovieDB.
 
-                for (MyLinkedListIterator<MovieList> lst = new MyLinkedListIterator<>(list); lst.hasNext(); ) {
+                for (MyLinkedListIterator<MovieList> lst = new MyLinkedListIterator<>(list); lst.hasNext(); ) {//find matching genre
                     curmovlist = lst.next();
                     if (genNode.equals(curmovlist.Head())) {
                             curmovlist.add(tit);
                             check = true;
                             break;
-                    } else if (genNode.compareTo(curmovlist.Head()) < 0) {
+                    } else if (genNode.compareTo(curmovlist.Head()) < 0) {//there isn't matching genre, so make new movielist
                         MovieList mv = new MovieList(genNode);
                         mv.add(tit);
                         list.putGenre(mv, previous);
@@ -48,7 +48,7 @@ public class MovieDB {
                     }
                     previous = lst.getCurr();
                 }
-                if (!check) {
+                if (!check) {//there isn't matching genre, so make new movielist
                     MovieList mv = new MovieList(genNode);
                     mv.add(tit);
                     list.putGenre(mv, previous);
@@ -70,7 +70,7 @@ public class MovieDB {
             MovieList curmovlist = null;
             for (MyLinkedListIterator<MovieList> lst = new MyLinkedListIterator<>(list); lst.hasNext();) {
                 curmovlist = lst.next();
-                if (genNode.equals(curmovlist.Head())) {
+                if (genNode.equals(curmovlist.Head())) {//if there is matching genre
                     if (curmovlist.isEmpty())
                         lst.remove();
                     else {
@@ -78,14 +78,14 @@ public class MovieDB {
                         for (MovieListIterator ite = new MovieListIterator(curmovlist); ite.hasNext();) {
                             searIte = ite.next();
                             if (searIte.equals(tit))
-                                ite.remove();
+                                ite.remove();//find a item and erase!
                         }
                     }
                     break;
-                } else if (genNode.compareTo(curmovlist.Head()) < 0) {
+                } else if (genNode.compareTo(curmovlist.Head()) < 0) {//there isn't a matching item..
                     return;
                 }
-                if (lst.getCurr().getItem().isEmpty())
+                if (lst.getCurr().getItem().isEmpty())//if movielist is empty, erase it!
                     lst.remove();
             }
         }
@@ -114,8 +114,8 @@ public class MovieDB {
                     if (searIte == null) {
                         if (tit == null)
                             results.add(new MovieDBItem(gen, null));
-                    } else if (searIte.contains(tit)) {
-                        results.add(new MovieDBItem(gen, searIte));
+                    } else if (searIte.contains(tit)) {//if there is matching one
+                        results.add(new MovieDBItem(gen, searIte));//add to result list
                     }
                 }
             }
@@ -159,7 +159,7 @@ public class MovieDB {
                     String searIte = null;
                     for (MovieListIterator ite = new MovieListIterator(curmovlist); ite.hasNext();) {
                         searIte = ite.next();
-                        results.add(new MovieDBItem(gen, searIte));
+                        results.add(new MovieDBItem(gen, searIte));//add everything to result list
                     }
                 }
             }
