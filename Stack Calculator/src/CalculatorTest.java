@@ -13,7 +13,6 @@ public class CalculatorTest {
 
                 command(input);
             } catch (Exception e) {
-                //System.out.println("입력이 잘못되었습니다. 오류 : " + e.toString());
                 System.out.println("ERROR");
             }
         }
@@ -134,7 +133,7 @@ public class CalculatorTest {
             char ch = in.charAt(0);
             long operand2 = 0;
             long operand1 = 0;
-            if(in.length()>1 || ('0'<ch && ch<'9')) {// number
+            if(in.length()>1 || ('0'<=ch && ch<='9')) {// number
                 cal.push(Long.parseLong(in));
             }
             else{ // operator
@@ -189,9 +188,6 @@ public class CalculatorTest {
         print(postfix);
         System.out.println();
         System.out.println(re);
-        // TODO : 아래 문장을 삭제하고 구현해라.
-        //System.out.println("<< command 함수에서 " + input + " 명령을 처리할 예정입니다 >>");
-
     }
 
     private static int checkPriority(char a) {
