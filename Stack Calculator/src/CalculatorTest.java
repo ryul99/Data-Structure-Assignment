@@ -23,7 +23,7 @@ public class CalculatorTest {
         Stack<Character> oper = new Stack<>();
         Stack<Long> cal = new Stack<>();
         int check = 0;//check previous element is operator or ~ or operand or ( or )// 1, 2, 3, 4, 5
-        String inte = "";
+        StringBuilder inte = new StringBuilder();
 
         input = "(" + input + ")";//adding parentheses both sides to easily combine operands
 
@@ -50,13 +50,13 @@ public class CalculatorTest {
             if ('0' <= in && in <= '9') {//if operand
                 if (check == 5 || check == 3)
                     throw new RuntimeException();
-                inte = inte + in;
+                inte.append(in);
             } else { // not number
                 if (checkPriority(in) == -1)
                     throw new RuntimeException();
                 if (inte.length() != 0) {//make operand
-                    postfix.add(inte);
-                    inte = "";
+                    postfix.add(inte.toString());
+                    inte = new StringBuilder();
                     check = 3;
                 }
 
@@ -100,14 +100,14 @@ public class CalculatorTest {
                                 oper.push(in);
                                 break;
                             } else if (checkPriority(in) > checkPriority(oper.peek())) {
-                                postfix.add("" + oper.pop());
+                                postfix.add(Character.toString(oper.pop()));
                                 continue;
                             } else {
                                 if (checkPriority(in) == 4 || checkPriority(in) == 3) {
                                     oper.push(in);
                                     break;
                                 } else {
-                                    postfix.add("" + oper.pop());
+                                    postfix.add(Character.toString(oper.pop()));
                                     continue;
                                 }
                             }
@@ -127,7 +127,7 @@ public class CalculatorTest {
         while (!oper.empty())
             postfix.add("" + oper.pop());
 
-        //calculate
+        //get operand and operator then calculate
         for(int i = 0; i < postfix.size(); i++){
             String in = postfix.get(i);
             char ch = in.charAt(0);
