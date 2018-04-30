@@ -52,7 +52,7 @@ public class CalculatorTest {
                     throw new RuntimeException();
                 inte.append(in);
             } else { // not number
-                if (checkPriority(in) == -1)
+                if (checkPriority(in) == -1 || checkPriority(in) == 3)
                     throw new RuntimeException();
                 if (inte.length() != 0) {//make operand
                     postfix.add(inte.toString());
