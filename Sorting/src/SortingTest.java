@@ -106,10 +106,11 @@ public class SortingTest {
             int temp = value[i];
             for (int j = i - 1; j >= 0; j--) {//shifting
                 value[j + 1] = value[j];
-                if (value[j] > temp) {
-                    value[j] = temp;
+                if (value[j] <= temp) {
+                    value[j + 1] = temp;
                     break;
-                }
+                } else if (j == 0)
+                    value[0] = temp;
             }
         }
         return (value);
@@ -134,14 +135,14 @@ public class SortingTest {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private static int[] DoMergeSort(int[] value) {
         //modification from lecture note
-        if(value.length > 1){
-            int[] a = new int[value.length/2];
-            int[] b = new int[value.length - value.length/2];
-            System.arraycopy(value,0, a, 0,value.length/2);
-            System.arraycopy(value,value.length/2, b, 0,value.length - value.length/2);
-            a= DoMergeSort(a);
-            b= DoMergeSort(b);
-            value = merge(a,b);
+        if (value.length > 1) {
+            int[] a = new int[value.length / 2];
+            int[] b = new int[value.length - value.length / 2];
+            System.arraycopy(value, 0, a, 0, value.length / 2);
+            System.arraycopy(value, value.length / 2, b, 0, value.length - value.length / 2);
+            a = DoMergeSort(a);
+            b = DoMergeSort(b);
+            value = merge(a, b);
         }
         // TODO : Merge Sort 를 구현하라.
         return (value);
@@ -149,43 +150,62 @@ public class SortingTest {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private static int[] DoQuickSort(int[] value) {
+        return QuickSort(value, 0, value.length);
+    }
+
+    private static int[] QuickSort(int[] value, int head, int tail) {
         //modification from lecture note
-        if(value.length > 1){
-//            int piIdx = 0;
-//            int currIdx = 0;// current index
-//            int pivot = value[0];
-//            for(int i = 1; i < value.length; i++){
-//                if(value[i] < pivot){
-//                    if(piIdx == currIdx)
-//                        currIdx = i;
-//                    swap(value, piIdx, i);
-//                    piIdx++;
-//                }
+        if (tail > head) {
+//            Queue<Integer> t = new LinkedList<>();
+            int check;
+            int pivot = value[head];
+            int pivotIdx = head;
+            for (int i = head + 1; i < tail; i++) {
+                if (value[i] < pivot)
+                    pivotIdx++;
+            }
+            swap(value, head, pivotIdx);
+            check = pivotIdx + 1;
+//            for (int j = pivotIdx + 1; j < tail; j++) {
+//                if (value[j] < pivot)
+//                    t.add(j);
 //            }
-//            swap(value, piIdx, currIdx);
-            int pivot = value[0];
-            int[] a = new int[value.length];
-            int[] b = new int[value.length];
-            int aidx = 0;//a's index
-            int bidx = 0;//b's index
-            for(int i = 1; i < value.length; i++){//calculate pivot index
-                if(pivot > value[i]){
-                    a[aidx] = value[i];
-                    aidx++;
-                } else {
-                    b[bidx] = value[i];
-                    bidx++;
+            for (int i = head; i < pivotIdx; i++) {
+                if (value[i] >= pivot) {
+                    for (; check < tail; check++) {
+                        if (value[check] < pivot) {
+                            swap(value, i, check);
+                            check++;
+                            break;
+                        }
+                    }
                 }
             }
-            int[] realA = new int[aidx];
-            int[] realB = new int[bidx];
-            System.arraycopy(a, 0, realA, 0, aidx);
-            System.arraycopy(b, 0, realB, 0, bidx);
-            DoQuickSort(realA);
-            DoQuickSort(realB);
-            System.arraycopy(realA, 0, value, 0, aidx);
-            value[aidx] = pivot;
-            System.arraycopy(realB, 0, value, aidx+1, bidx);
+            QuickSort(value, head, pivotIdx);
+            QuickSort(value, pivotIdx + 1, tail);
+//            int pivot = value[0];
+//            int[] a = new int[value.length];
+//            int[] b = new int[value.length];
+//            int aidx = 0;//a's index
+//            int bidx = 0;//b's index
+//            for(int i = 1; i < value.length; i++){//calculate pivot index
+//                if(pivot > value[i]){
+//                    a[aidx] = value[i];
+//                    aidx++;
+//                } else {
+//                    b[bidx] = value[i];
+//                    bidx++;
+//                }
+//            }
+//            int[] realA = new int[aidx];
+//            int[] realB = new int[bidx];
+//            System.arraycopy(a, 0, realA, 0, aidx);
+//            System.arraycopy(b, 0, realB, 0, bidx);
+//            DoQuickSort(realA);
+//            DoQuickSort(realB);
+//            System.arraycopy(realA, 0, value, 0, aidx);
+//            value[aidx] = pivot;
+//            System.arraycopy(realB, 0, value, aidx+1, bidx);
         }
         // TODO : Quick Sort 를 구현하라.
         return (value);
@@ -199,17 +219,17 @@ public class SortingTest {
         int[] temp = new int[value.length];
         int check = 1;
         int index, pval;
-        for(int n = 0; n < 10; n++){//range of int is smaller than 10^10
-            for(int i = 0; i < 19; i++)//initialize
+        for (int n = 0; n < 10; n++) {//range of int is smaller than 10^10
+            for (int i = 0; i < 19; i++)//initialize
                 counts[i] = 0;
-            pval = (int)Math.pow(10.0, (double) n);//10^n
-            for(int i = 0; i < value.length; i++){//253 -> n:0 => 3, n:1 => 5, ...
+            pval = (int) Math.pow(10.0, (double) n);//10^n
+            for (int i = 0; i < value.length; i++) {//253 -> n:0 => 3, n:1 => 5, ...
                 index = (value[i] / pval) % 10;
                 counts[9 + index]++; // 9 + index is for negative number
             }
-            for(int i = 1; i < 19; i++)//accumulating
-                counts[i] = counts[i] + counts[i-1];
-            for(int i = value.length -1; i >= 0; i--){
+            for (int i = 1; i < 19; i++)//accumulating
+                counts[i] = counts[i] + counts[i - 1];
+            for (int i = value.length - 1; i >= 0; i--) {
                 index = (value[i] / pval) % 10;
                 temp[counts[9 + index] - 1] = value[i];
                 counts[9 + index]--;
@@ -253,10 +273,10 @@ public class SortingTest {
                 re[i] = a[adx];
                 adx++;
             } else {
-                if(a[adx] < b[bdx]){
+                if (a[adx] <= b[bdx]) {
                     re[i] = a[adx];
                     adx++;
-                }else{
+                } else {
                     re[i] = b[bdx];
                     bdx++;
                 }
