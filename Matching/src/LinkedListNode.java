@@ -1,6 +1,6 @@
 public class LinkedListNode<T> {
     private T item;
-    private LinkedListNode<T> next;
+    private LinkedListNode next;
 
     public LinkedListNode(){
         next = null;
@@ -16,7 +16,7 @@ public class LinkedListNode<T> {
         this.item = item;
     }
 
-    public void setNext(LinkedListNode<T> next) {
+    public void setNext(LinkedListNode next) {
         this.next = next;
     }
 

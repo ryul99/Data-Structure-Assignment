@@ -1,5 +1,10 @@
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.function.Function;
+
 //public class AVLtree<T extends Comparable<? super T>> {
-public class AVLtree<T extends LinkedList> {
+//public class AVLtree<T extends LinkedList> {
+public class AVLtree<T extends Comparable<T>> {
     private AVLtreeNode<T> root;
     private int numberOfItems;
     private StringBuilder pr;//print
@@ -14,11 +19,11 @@ public class AVLtree<T extends LinkedList> {
         numberOfItems = 0;
     }
 
-    public void insert(T element, int i, int j) {
-        root = insert(element, i, j, root);
+    public void insert(T element) {
+        root = insert(element, root);
     }
 
-    public AVLtreeNode insert(T element, int i, int j, AVLtreeNode<T> base) {
+    public AVLtreeNode<T> insert(T element, AVLtreeNode<T> base) {
         numberOfItems++;
 //        AVLtreeNode<T> uBase = null;//unbalanced base
 //        AVLtreeNode<T> uParent = null;//unbalanced base's parent
@@ -27,7 +32,6 @@ public class AVLtree<T extends LinkedList> {
 //        int twhere = 0;//temporary where
         if (base == null) {
             AVLtreeNode<T> a = new AVLtreeNode<T>(element, null, null);
-            a.getItem().insert(i, j);
             base = a;
         } else if (base.getItem() == null) {
             base.setItem(element);
@@ -55,9 +59,9 @@ public class AVLtree<T extends LinkedList> {
 //                        tBase = base;
 //                        base = right;
 //                        twhere = 1;
-                base.setRightChild(insert(element, i, j, right));
+                base.setRightChild(insert(element, right));
 //                }
-            } else if (base.getItem().compareTo(element) > 0) {
+            } else if (base.getItem().compareTo(element) >= 0) {
 //                    base.setHeight(Math.max(((left == null ? 0 : left.getHeight()) + 1), (right == null ? 0 : right.getHeight())) + 1);
 //                    base.setBalance(((left == null ? 0 : left.getHeight()) + 1) - (right == null ? 0 : right.getHeight()));
 //                    base.setLeftChild(insert(element, i, j, left));
@@ -74,13 +78,13 @@ public class AVLtree<T extends LinkedList> {
 //                        tBase = base;
 //                        base = left;
 //                        twhere = -1;
-                base.setLeftChild(insert(element, i, j, left));
+                base.setLeftChild(insert(element, left));
 //                }
-            } else {
-                base.getItem().insert(i, j);
+            } //else {
+//                base.getItem().insert(i, j);
 //                    break;
 //                    return base;
-            }
+//            }
 //            }
             if (base != null) {
                 //use else if because changing can effect testing
@@ -150,13 +154,13 @@ public class AVLtree<T extends LinkedList> {
         return root;
     }
 
-    public T search(T input) {//input's length is 6
-        int check = 0;
+    public T search(Function<T, Integer> comparator) {
+//        int check = 0;
         AVLtreeNode<T> curr = root;
         while (curr != null) {
-            if (curr.getItem().compareTo(input) > 0) {
+            if (comparator.apply(curr.getItem()) > 0) {
                 curr = curr.getLeftChild();
-            } else if (curr.getItem().compareTo(input) < 0) {
+            } else if (comparator.apply(curr.getItem()) < 0) {
                 curr = curr.getRightChild();
             } else {
                 return curr.getItem();
@@ -165,23 +169,53 @@ public class AVLtree<T extends LinkedList> {
         return null;
     }
 
-    public String print(AVLtreeNode<LinkedList<IndexNode>> roo) {
-        StringBuilder re = new StringBuilder("");
-        String ret = print(roo, re);
-        if (ret.length() == 0)
-            return "EMPTY";
-        return ret;
+//    public T search(T input) {//input's length is 6
+//        int check = 0;
+//        AVLtreeNode<T> curr = root;
+//        while (curr != null) {
+//            if (curr.getItem().compareTo(input) > 0) {
+//                curr = curr.getLeftChild();
+//            } else if (curr.getItem().compareTo(input) < 0) {
+//                curr = curr.getRightChild();
+//            } else {
+//                return curr.getItem();
+//            }
+//        }
+//        return null;
+//    }
+
+//    public String print(AVLtreeNode<T> roo) {
+//        StringBuilder re = new StringBuilder("");
+//        String ret = print(roo, re);
+//        if (ret.length() == 0)
+//            return "EMPTY";
+//        return ret;
+//    }
+
+//    private String print(AVLtreeNode<T> rot, StringBuilder re) {
+//        if (rot != null && rot.getItem() != null) {
+//            if (re.length() != 0)
+//                re.append(" ");
+//            re.append(rot.getItem().toString());
+//            print(rot.getLeftChild(), re);
+//            print(rot.getRightChild(), re);
+//            return re.toString();
+//        }
+//        return "";
+//    }
+    public ArrayList<T> preorder () {
+        ArrayList<T> out = new ArrayList<>();
+        if( root.getItem() == null)
+            return null;
+        return preorder(root, out);
     }
 
-    private String print(AVLtreeNode<LinkedList<IndexNode>> rot, StringBuilder re) {
-        if (rot != null && rot.getItem() != null) {
-            if (re.length() != 0)
-                re.append(" ");
-            re.append(rot.getItem().toString());
-            print(rot.getLeftChild(), re);
-            print(rot.getRightChild(), re);
-            return re.toString();
-        }
-        return "";
+    private ArrayList<T> preorder (AVLtreeNode<T> rot, ArrayList<T> out) {
+        if(rot == null)
+            return out;
+        out.add(rot.getItem());
+        out = preorder(rot.getLeftChild(), out);
+        out = preorder(rot.getRightChild(), out);
+        return out;
     }
 }
