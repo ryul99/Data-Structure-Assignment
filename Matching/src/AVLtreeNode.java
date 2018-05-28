@@ -6,13 +6,16 @@ public class AVLtreeNode<T> {
     private T item;
 
     public AVLtreeNode() {
+        height = 0;
+        leftChild = null;
+        rightChild = null;
     }
 
     public AVLtreeNode(T item, AVLtreeNode<T> leftChild, AVLtreeNode<T> rightChild) {
         this.item = item;
         this.leftChild = leftChild;
         this.rightChild = rightChild;
-        height = Math.max((leftChild == null ? 0 : leftChild.getHeight()), (rightChild == null ? 0 : rightChild.getHeight())) + 1;
+        this.height = Math.max((leftChild == null ? 0 : leftChild.getHeight()), (rightChild == null ? 0 : rightChild.getHeight())) + 1;
 //        balance = (leftChild == null ? 0 : leftChild.getHeight()) - (rightChild == null ? 0 : rightChild.getHeight());
     }
 

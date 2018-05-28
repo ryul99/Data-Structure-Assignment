@@ -28,7 +28,7 @@ public class HashTable<K extends Comparable<K>, V extends Comparable<V>> {
         in.insert(value);
         Pair<K, LinkedList<V>> inn = new Pair<>(key, in);
         if (hashtable[hashcode].getRoot().getItem() == null)
-            hashtable[hashcode].getRoot().setItem(inn);
+            hashtable[hashcode].insert(inn);
         else if (hashtable[hashcode].search(p -> p.first().compareTo(key)) == null) {
             hashtable[hashcode].insert(inn);
         } else {

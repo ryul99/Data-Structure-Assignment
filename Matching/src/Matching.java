@@ -87,7 +87,7 @@ public class Matching {
                     } else if (j == share) {
                         if(remain != 0) {
                             int p = 0, q = 0;
-                            String inn = in.substring(j * 6, j * 6 + remain);
+                            String inn = in.substring(j * 6 + remain - 6, j * 6 + remain);
                             ArrayList<Pair<Integer, Integer>> re = table.search(inn);
                             if (re == null) {
                                 System.out.println("(0, 0)");
@@ -112,7 +112,8 @@ public class Matching {
                                     }
                                 }
                             }
-                            ou = tou;
+                            ou = (ArrayList<Pair<Integer, Integer>>) tou.clone();
+                            tou.removeAll(tou);
                         }
                         for (int f = 0; f < ou.size(); f++) {
                             if (f != 0)
@@ -146,7 +147,8 @@ public class Matching {
                                 }
                             }
                         }
-                        ou = tou;
+                        ou = (ArrayList<Pair<Integer, Integer>>) tou.clone();
+                        tou.removeAll(tou);
                     }
                 }
                 if (out.toString().length() == 0) {
