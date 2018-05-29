@@ -26,14 +26,14 @@ public class Matching {
                 if (input.compareTo("QUIT") == 0)
                     break;
 
-                command(input, table);
+                table = command(input, table);
             } catch (IOException e) {
                 System.out.println("입력이 잘못되었습니다. 오류 : " + e.toString());
             }
         }
     }
 
-    private static void command(String input, HashTable inTable) throws IOException {
+    private static HashTable<String, Pair<Integer, Integer>> command(String input, HashTable inTable) throws IOException {
 //		// TODO : 아래 문장을 삭제하고 구현해라.
 //		System.out.println("<< command 함수에서 " + input + " 명령을 처리할 예정입니다 >>");
         HashTable table = inTable;
@@ -41,6 +41,7 @@ public class Matching {
         int i = 0;
         if (input.charAt(0) == '<') {
             BufferedReader buf = new BufferedReader(new FileReader(in));
+            table = new HashTable<>(Matching::hashFunc);
             while (true) {
                 i++;
                 String read = buf.readLine();
@@ -61,7 +62,7 @@ public class Matching {
                 ArrayList<Pair<Integer, Integer>> re = table.search(in);
                 if (re == null) {
                     System.out.println("(0, 0)");
-                    return;
+                    return table;
                 }
                 for (int f = 0; f < re.size(); f++) {
                     if (f != 0)
@@ -69,7 +70,7 @@ public class Matching {
                     out.append(re.get(f).toString());
                 }
                 System.out.println(out);
-                return;
+                return table;
             } else {
                 ArrayList<Pair<Integer, Integer>> ou = new ArrayList<>();
                 ArrayList<Pair<Integer, Integer>> tou = new ArrayList<>();//temporary ou
@@ -81,7 +82,7 @@ public class Matching {
                         ArrayList<Pair<Integer, Integer>> re = table.search(inn);
                         if (re == null) {
                             System.out.println("(0, 0)");
-                            return;
+                            return table;
                         }
                         ou = re;
                     } else if (j == share) {
@@ -91,7 +92,7 @@ public class Matching {
                             ArrayList<Pair<Integer, Integer>> re = table.search(inn);
                             if (re == null) {
                                 System.out.println("(0, 0)");
-                                return;
+                                return table;
                             }
                             while (true) {
                                 if (p >= ou.size() || q >= re.size())
@@ -126,7 +127,7 @@ public class Matching {
                         ArrayList<Pair<Integer, Integer>> re = table.search(inn);
                         if (re == null) {
                             System.out.println("(0, 0)");
-                            return;
+                            return table;
                         }
                         while (true) {
                             if (p >= ou.size() || q >= re.size())
@@ -153,11 +154,11 @@ public class Matching {
                 }
                 if (out.toString().length() == 0) {
                     System.out.println("(0, 0)");
-                    return;
+                    return table;
                 }
                 System.out.println(out);
             }
         }
-        return;
+        return table;
     }
 }
