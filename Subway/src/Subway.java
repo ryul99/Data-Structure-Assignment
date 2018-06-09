@@ -17,6 +17,13 @@ public class Subway {
         SortedSet<Pair<Long, String>> accD;//clone of accudis
         HashMap<String, String> comeFrom = new HashMap<>();//<Unique1, Unique2> / Unique1 is comes from Unique2
         File file = new File(args[0]);
+
+//        HashMap<String, Long> d; // Unique, distance
+//        SortedSet<Pair<Long, String>> Q; // set of all vertices
+//        SortedSet<String> V = new TreeSet<>(); // set of all vertices
+//        HashMap<String, String> previous; // retract
+//        HashSet<String> S;
+
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             BufferedReader data = new BufferedReader(new FileReader(file));
@@ -52,6 +59,9 @@ public class Subway {
                     a.add(inarr[0]);
                     transfer.put(inarr[1], a);
                 }
+
+//                V.add(inarr[0]);
+
             }
             while (true) {
                 String in = data.readLine();
@@ -69,6 +79,12 @@ public class Subway {
 
 
             while (true) {//every case
+
+//                d = new HashMap<>();
+//                Q = new TreeSet();
+//                previous = new HashMap<>(); // retract
+//                S = new HashSet<>();
+
                 long dist = 0;//distance of from start to end + 1
                 chT = new HashSet<>();
                 contains = new HashMap<>();
@@ -95,7 +111,7 @@ public class Subway {
                     }
                 }
 
-                //dijkstra
+//                dijkstra
                 while (!visiSta.contains(match.get(end))) {
                     Pair<Long, String> min = accD.first();
                     dist = min.first();
@@ -109,9 +125,9 @@ public class Subway {
                             Pair<Long, String> n = new Pair<>((dist + ele.second()), ele.first());
                             if (o == null) {
                                 accD.add(n);
-                                contains.put(ele.first(), new Pair<>(ele.second(), ele.first()));
+                                contains.put(ele.first(), n);
                                 comeFrom.put(ele.first(), Uni);
-                            } else if (o.first().compareTo(n.first()) > 0) {
+                            } else if (o.first() - n.first() > 0) {
                                 accD.remove(o);
                                 accD.add(n);
                                 contains.remove(ele.first());
@@ -122,6 +138,14 @@ public class Subway {
                         }
                     }
                 }
+
+//                for(String i : V){
+//                    d.put(i, (long) 0);
+//                }
+//                Q = (TreeSet) ((TreeSet<String>) V).clone();
+//                while(!Q.isEmpty()) {
+//                    Q.
+//                }
 
                 //print
                 StringBuilder out = new StringBuilder();
