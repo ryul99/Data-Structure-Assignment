@@ -75,11 +75,10 @@ public class Subway {
                 comeFrom = new HashMap<>();
                 accD = (TreeSet<Pair<Integer, String>>) ((TreeSet<Pair<Integer, String>>) accudis).clone();
                 tempAdList = (HashMap<String, LinkedList<Pair<String, Integer>>>) adjacencyList.clone();
-                //chT = new HashSet<>();
 
                 //interpreting
                 String in = br.readLine();
-                if (in == "QUIT")
+                if (in.equals("QUIT"))
                     break;
                 String[] inarr = in.split(" ");
                 String start = revmatch.get(inarr[0]);
@@ -87,7 +86,8 @@ public class Subway {
                 accD.add(new Pair<>(1, start));
                 if (transfer.get(inarr[0]).size() > 1) {//if starting station is transfer station
                     for (String i : transfer.get(inarr[0])) {
-                        for (Pair<String, Integer> j : tempAdList.get(i)) {
+                        for (int p = 0; p < tempAdList.get(i).size(); p++) {
+                            Pair<String, Integer> j = tempAdList.get(i).get(p);
                             if (transfer.get(inarr[0]).contains(j.first())) {
                                 tempAdList.get(i).remove(j);
                                 tempAdList.get(i).add(new Pair<>(j.first(), 0));
@@ -98,21 +98,22 @@ public class Subway {
 
                 //dijkstra
                 while (visited.contains(end)) {
-                    visited.add(accD.first().second());
-                    for (Pair<String, Integer> ele : tempAdList.get(accD.first().second())) {
+                    Pair<Integer, String> min = accD.first();
+                    visited.add(min.second());
+                    for (Pair<String, Integer> ele : tempAdList.get(min.second())) {
                         if (!visited.contains(ele.first())) {
                             Pair<Integer, String> o = contains.get(ele.first());
-                            Pair<Integer, String> n = new Pair<>(accD.first().first() + ele.second(), ele.first());
+                            Pair<Integer, String> n = new Pair<>(min.first() + ele.second(), ele.first());
                             if (o == null) {
                                 accD.add(n);
                                 contains.put(ele.first(), new Pair<>(ele.second(), ele.first()));
-                                comeFrom.put(ele.first(), accD.first().second());
+                                comeFrom.put(ele.first(), min.second());
                             } else if (o.compareTo(n) > 0) {
                                 accD.remove(o);
                                 contains.remove(ele.first());
                                 accD.add(n);
                                 contains.put(ele.first(), n);
-                                comeFrom.put(ele.first(), accD.first().second());
+                                comeFrom.put(ele.first(), min.second());
                             }
                         }
                     }
@@ -143,7 +144,6 @@ public class Subway {
                 visited.clear();
                 accD.clear();
                 comeFrom.clear();
-                chT.clear();
             }
         } catch (IOException e) {
             System.out.println("ERROR : " + e.toString());
