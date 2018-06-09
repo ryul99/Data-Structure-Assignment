@@ -1,13 +1,13 @@
-public class Pair<T extends Comparable<T>, U extends Comparable<U>> implements Comparable<Pair<T, U>>{
-    private final T first;
+public class LPair<Long, U extends Comparable<U>> implements Comparable<LPair<Long, U>> {
+    private final Long first;
     private final U second;
 
-    public Pair(T first, U second) {
+    public LPair(Long first, U second) {
         this.first = first;
         this.second = second;
     }
 
-    public T first() {
+    public Long first() {
         return first;
     }
 
@@ -25,16 +25,18 @@ public class Pair<T extends Comparable<T>, U extends Comparable<U>> implements C
     }
 
     @Override
-    public int compareTo(Pair<T, U> other) {
-        int compare = first.compareTo(other.first);
-        if (compare != 0)
-            return compare;
+    public int compareTo(LPair<Long, U> other) {
+        long compare = (long) first - (long) other.first;
+        if (compare > 0)
+            return 1;
+        else if (compare < 0)
+            return -1;
         return second.compareTo(other.second);
     }
 
 
-    public boolean equals(Pair<T, U> other) {
-        if(this.first.equals(other.first) && this.second.equals(other.second))
+    public boolean equals(LPair<Long, U> other) {
+        if (this.first.equals(other.first) && this.second.equals(other.second))
             return true;
         return false;
     }
