@@ -32,5 +32,9 @@ public class Pair<T extends Comparable<T>, U extends Comparable<U>> implements C
         return second.compareTo(other.second);
     }
 
-
+    public boolean equals(Pair<T, U> other) {
+        if(this.first.equals(other.first) && this.second.equals(other.second))
+            return true;
+        return false;
+    }
 }

@@ -69,12 +69,13 @@ public class Subway {
 
 
             while (true) {//every case
+                long dist = 0;//distance of from start to end + 1
                 chT = new HashSet<>();
                 contains = new HashMap<>();
                 visiSta = new HashSet<>();
                 visited = new HashSet<>();
                 comeFrom = new HashMap<>();
-                accD = (TreeSet<Pair<Long, String>>) ((TreeSet<Pair<Long, String>>) accudis).clone();
+                accD = (TreeSet<Pair<Long, String>>) ((TreeSet<Pair<Long,String>>) accudis).clone();
                 tempAdList = (HashMap<String, LinkedList<Pair<String, Long>>>) adjacencyList.clone();
 
                 //interpreting
@@ -97,23 +98,26 @@ public class Subway {
                 //dijkstra
                 while (!visiSta.contains(match.get(end))) {
                     Pair<Long, String> min = accD.first();
+                    dist = min.first();
+                    String Uni = min.second();
                     accD.remove(accD.first());
-                    visited.add(min.second());
-                    visiSta.add(match.get(min.second()));
-                    for (Pair<String, Long> ele : tempAdList.get(min.second())) {
+                    visited.add(Uni);
+                    visiSta.add(match.get(Uni));
+                    for (Pair<String, Long> ele : tempAdList.get(Uni)) {
                         if (!visited.contains(ele.first())) {
                             Pair<Long, String> o = contains.get(ele.first());
-                            Pair<Long, String> n = new Pair<>((min.first() + ele.second()), ele.first());
+                            Pair<Long, String> n = new Pair<>((dist + ele.second()), ele.first());
                             if (o == null) {
                                 accD.add(n);
                                 contains.put(ele.first(), new Pair<>(ele.second(), ele.first()));
-                                comeFrom.put(ele.first(), min.second());
-                            } else if (o.compareTo(n) > 0) {
+                                comeFrom.put(ele.first(), Uni);
+                            } else if (o.first().compareTo(n.first()) > 0) {
                                 accD.remove(o);
-                                contains.remove(ele.first());
                                 accD.add(n);
+                                contains.remove(ele.first());
                                 contains.put(ele.first(), n);
-                                comeFrom.put(ele.first(), min.second());
+                                comeFrom.remove(ele.first());
+                                comeFrom.put(ele.first(), Uni);
                             }
                         }
                     }
@@ -141,7 +145,7 @@ public class Subway {
                 }
                 out.insert(0, " ").insert(0, match.get(where));
                 System.out.println(out.toString());
-                System.out.println(accD.first().first() - 1);
+                System.out.println(dist - 1);
 
                 //refresh
                 tempAdList.clear();
