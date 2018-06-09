@@ -72,7 +72,7 @@ public class Subway {
                 contains = new HashMap<>();
                 visited = new HashSet<>();
                 comeFrom = new HashMap<>();
-                accD = (TreeSet<Pair<Integer,String>>) ((TreeSet<Pair<Integer,String>>) accudis).clone();
+                accD = (TreeSet<Pair<Integer, String>>) ((TreeSet<Pair<Integer, String>>) accudis).clone();
                 tempAdList = (HashMap<String, LinkedList<Pair<String, Integer>>>) adjacencyList.clone();
 
                 String in = br.readLine();
@@ -84,8 +84,8 @@ public class Subway {
                 accD.add(new Pair<>(1, start));
                 if (transfer.get(inarr[0]).size() > 1) {//if starting station is transfer station
                     for (String i : transfer.get(inarr[0])) {
-                        for(Pair<String , Integer> j : tempAdList.get(i)){
-                            if(transfer.get(inarr[0]).contains(j.first())) {
+                        for (Pair<String, Integer> j : tempAdList.get(i)) {
+                            if (transfer.get(inarr[0]).contains(j.first())) {
                                 tempAdList.get(i).remove(j);
                                 tempAdList.get(i).add(new Pair<>(j.first(), 0));
                             }
@@ -94,13 +94,37 @@ public class Subway {
                 }
                 while (visited.contains(end)) {
                     visited.add(accD.first().second());
-                    for (Pair<String, Integer> ele : tempAdList.get(accD.first().second()) ){
-                        if(!visited.contains(ele.first())) {
-                            accD.remove(contains.get(ele.first()));
-
+                    for (Pair<String, Integer> ele : tempAdList.get(accD.first().second())) {
+                        if (!visited.contains(ele.first())) {
+                            Pair<Integer, String> o = contains.get(ele.first());
+                            Pair<Integer, String> n = new Pair<>(accD.first().first() + ele.second(), ele.first());
+                            if (o == null) {
+                                accD.add(n);
+                                contains.put(ele.first(), new Pair<>(ele.second(), ele.first()));
+                                comeFrom.put(ele.first(), accD.first().second());
+                            } else if (o.compareTo(n) > 0) {
+                                accD.remove(o);
+                                contains.remove(ele.first());
+                                accD.add(n);
+                                contains.put(ele.first(), n);
+                                comeFrom.put(ele.first(), accD.first().second());
+                            }
                         }
                     }
                 }
+
+                StringBuilder out = new StringBuilder();
+                String where = end;
+                while(where.equals(start)) {
+                    if(where.equals(end))
+                        out.insert(0, match.get(where));
+                    else
+                    out.insert(0, " ").insert(0, match.get(where));
+                    where = comeFrom.get(where);
+                }
+                out.insert(0, where);
+                System.out.println(where.toString());
+                System.out.println(accD.first().first()-1);
 
                 tempAdList.clear();
                 contains.clear();
