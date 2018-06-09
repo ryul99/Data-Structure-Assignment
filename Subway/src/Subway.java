@@ -1,5 +1,3 @@
-import com.sun.deploy.util.OrderedHashSet;
-
 import java.io.*;
 import java.util.*;
 
@@ -10,6 +8,7 @@ public class Subway {
         HashMap<String, String> revmatch = new HashMap<>();//<station, Unique> / immutable
         HashMap<String, LinkedList<String>> transfer = new HashMap<>();//<station, LinkedLIst<Unique>>
         SortedSet<Pair<Integer, String>> accudis = new TreeSet<>();//<accumulated distance, Unique> / starting point is 1. get real result by minus 1 from result / must reset each case...so make this immutable
+        HashSet<String> chT = new HashSet<>();//<Unique> transfer stations are in it
 
         HashMap<String, Pair<Integer, String>> contains;//<Unique, member of accD> / whether accD contains specific Unique or not
         HashMap<String, LinkedList<Pair<String, Integer>>> tempAdList;//<Unique, LinkedList<Unique, distance>> / temporary
@@ -24,12 +23,14 @@ public class Subway {
             //pre processing
             while (true) {
                 String in = data.readLine();
-                if (in == "\n")
+                if (in.equals(""))
                     break;
                 String[] inarr = in.split(" ");
                 match.put(inarr[0], inarr[1]);
                 String o = revmatch.put(inarr[1], inarr[0]);
                 if (o != null) {//if value of revmatch has replaced == station is transfer station
+                    chT.add(inarr[0]);
+                    chT.add(o);
                     for (String i : transfer.get(inarr[1])) {
                         if (adjacencyList.get(i) == null) {
                             LinkedList<Pair<String, Integer>> a = new LinkedList<>();
@@ -74,9 +75,11 @@ public class Subway {
                 comeFrom = new HashMap<>();
                 accD = (TreeSet<Pair<Integer, String>>) ((TreeSet<Pair<Integer, String>>) accudis).clone();
                 tempAdList = (HashMap<String, LinkedList<Pair<String, Integer>>>) adjacencyList.clone();
+                //chT = new HashSet<>();
 
+                //interpreting
                 String in = br.readLine();
-                if (in == null)
+                if (in == "QUIT")
                     break;
                 String[] inarr = in.split(" ");
                 String start = revmatch.get(inarr[0]);
@@ -92,6 +95,8 @@ public class Subway {
                         }
                     }
                 }
+
+                //dijkstra
                 while (visited.contains(end)) {
                     visited.add(accD.first().second());
                     for (Pair<String, Integer> ele : tempAdList.get(accD.first().second())) {
@@ -113,24 +118,32 @@ public class Subway {
                     }
                 }
 
+                //print
                 StringBuilder out = new StringBuilder();
                 String where = end;
-                while(where.equals(start)) {
-                    if(where.equals(end))
+                while (where.equals(start)) {
+                    if (where.equals(end))
                         out.insert(0, match.get(where));
-                    else
-                    out.insert(0, " ").insert(0, match.get(where));
+                    else {
+                        if (!chT.contains(where))
+                            out.insert(0, " ").insert(0, match.get(where));
+                        else {
+                            out.insert(0, " ").insert(0, "]").insert(0, match.get(where)).insert(0, "[");
+                        }
+                    }
                     where = comeFrom.get(where);
                 }
-                out.insert(0, where);
+                out.insert(0, " ").insert(0, where);
                 System.out.println(where.toString());
-                System.out.println(accD.first().first()-1);
+                System.out.println(accD.first().first() - 1);
 
+                //refresh
                 tempAdList.clear();
                 contains.clear();
                 visited.clear();
                 accD.clear();
                 comeFrom.clear();
+                chT.clear();
             }
         } catch (IOException e) {
             System.out.println("ERROR : " + e.toString());
