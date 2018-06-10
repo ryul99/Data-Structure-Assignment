@@ -7,14 +7,14 @@ public class Subway {
         HashMap<String, String> match = new HashMap<>();//<Unique, station> / immutable
         HashMap<String, String> revmatch = new HashMap<>();//<station, Unique> / immutable
         HashMap<String, LinkedList<String>> transfer = new HashMap<>();//<station, LinkedLIst<Unique>>
-        SortedSet<Pair<Long, String>> accudis = new TreeSet<>();//<accumulated distance, Unique> / starting point is 1. get real result by minus 1 from result / must reset each case...so make this immutable
+//        SortedSet<Pair<Long, String>> accudis = new TreeSet<>();
 
         HashSet<String> chT = new HashSet<>();//<Unique> transfer stations are in it
         HashMap<String, Pair<Long, String>> contains;//<Unique, member of accD> / whether accD contains specific Unique or not
         HashMap<String, LinkedList<Pair<String, Long>>> tempAdList;//<Unique, LinkedList<Unique, distance>> / temporary
         HashSet<String> visited = new HashSet<>();//<Unique> / check whether Unique(station) is visited (visited Unique is in it)
         HashSet<String> visiSta = new HashSet<>();//station version of visited
-        SortedSet<Pair<Long, String>> accD;//clone of accudis
+        SortedSet<Pair<Long, String>> accD;////<accumulated distance, Unique> / starting point is 1. get real result by minus 1 from result / must reset each case
         HashMap<String, String> comeFrom = new HashMap<>();//<Unique1, Unique2> / Unique1 is comes from Unique2
         File file = new File(args[0]);
 
@@ -91,8 +91,16 @@ public class Subway {
                 visiSta = new HashSet<>();
                 visited = new HashSet<>();
                 comeFrom = new HashMap<>();
-                accD = (TreeSet<Pair<Long, String>>) ((TreeSet<Pair<Long,String>>) accudis).clone();
-                tempAdList = (HashMap<String, LinkedList<Pair<String, Long>>>) adjacencyList.clone();
+                accD = new TreeSet<>();
+//                accD = (TreeSet<Pair<Long, String>>) ((TreeSet<Pair<Long,String>>) accudis).clone();
+                tempAdList = new HashMap<>();
+                for(HashMap.Entry<String, LinkedList<Pair<String, Long>>> entry : adjacencyList.entrySet()){
+                    LinkedList<Pair<String, Long>> a = new LinkedList<>();
+                    for(Pair<String, Long> g : entry.getValue()) {
+                        a.add(new Pair<>(g.first(), g.second()));
+                    }
+                    tempAdList.put(entry.getKey(), a);
+                }
 
                 //interpreting
                 String in = br.readLine();
@@ -105,8 +113,10 @@ public class Subway {
                 if (transfer.get(inarr[0]).size() > 1) {//if starting station is transfer station
                     for (String i : transfer.get(inarr[0])) {
                         for (String j : transfer.get(inarr[0])) {
-                            tempAdList.get(i).remove(new Pair<>(j, (long) 5));
-                            tempAdList.get(i).add(new Pair<>(j, (long) 0));
+                            if(!i.equals(j)) {
+                                tempAdList.get(i).remove(new Pair<>(j, (long) 5));
+                                tempAdList.get(i).add(new Pair<>(j, (long) 0));
+                            }
                         }
                     }
                 }
@@ -119,21 +129,23 @@ public class Subway {
                     accD.remove(accD.first());
                     visited.add(Uni);
                     visiSta.add(match.get(Uni));
-                    for (Pair<String, Long> ele : tempAdList.get(Uni)) {
-                        if (!visited.contains(ele.first())) {
-                            Pair<Long, String> o = contains.get(ele.first());
-                            Pair<Long, String> n = new Pair<>((dist + ele.second()), ele.first());
-                            if (o == null) {
-                                accD.add(n);
-                                contains.put(ele.first(), n);
-                                comeFrom.put(ele.first(), Uni);
-                            } else if (o.first() - n.first() > 0) {
-                                accD.remove(o);
-                                accD.add(n);
-                                contains.remove(ele.first());
-                                contains.put(ele.first(), n);
-                                comeFrom.remove(ele.first());
-                                comeFrom.put(ele.first(), Uni);
+                    if (tempAdList.get(Uni) != null) {
+                        for (Pair<String, Long> ele : tempAdList.get(Uni)) {
+                            if (!visited.contains(ele.first())) {
+                                Pair<Long, String> o = contains.get(ele.first());
+                                Pair<Long, String> n = new Pair<>((dist + ele.second()), ele.first());
+                                if (o == null) {
+                                    accD.add(n);
+                                    contains.put(ele.first(), n);
+                                    comeFrom.put(ele.first(), Uni);
+                                } else if (o.first() - n.first() > 0) {
+                                    accD.remove(o);
+                                    accD.add(n);
+                                    contains.remove(ele.first());
+                                    contains.put(ele.first(), n);
+                                    comeFrom.remove(ele.first());
+                                    comeFrom.put(ele.first(), Uni);
+                                }
                             }
                         }
                     }
@@ -153,6 +165,9 @@ public class Subway {
                 String prewhere = null;
                 int prestart;
                 while (!match.get(where).equals(match.get(start))) {
+
+//                    System.out.println(match.get(where));
+
                     prestart = match.get(where).length() + 1;
                     if (where.equals(end)) {
                         out.insert(0, match.get(where));
@@ -178,7 +193,10 @@ public class Subway {
                 accD.clear();
                 comeFrom.clear();
                 chT.clear();
+                visiSta.clear();
             }
+            br.close();
+            data.close();
         } catch (IOException e) {
             System.out.println("ERROR : " + e.toString());
         }
