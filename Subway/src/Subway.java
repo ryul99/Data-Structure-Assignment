@@ -14,7 +14,7 @@ public class Subway {
         HashMap<String, LinkedList<Pair<String, Long>>> tempAdList;//<Unique, LinkedList<Unique, distance>> / temporary
         HashSet<String> visited = new HashSet<>();//<Unique> / check whether Unique(station) is visited (visited Unique is in it)
         HashSet<String> visiSta = new HashSet<>();//station version of visited
-        SortedSet<Pair<Long, String>> accD;////<accumulated distance, Unique> / starting point is 1. get real result by minus 1 from result / must reset each case
+        SortedSet<Pair<Long, String>> accD;//<accumulated distance, Unique> / starting point is 1. get real result by minus 1 from result / must reset each case
         HashMap<String, String> comeFrom = new HashMap<>();//<Unique1, Unique2> / Unique1 is comes from Unique2
         File file = new File(args[0]);
 
@@ -84,7 +84,7 @@ public class Subway {
 //                Q = new TreeSet();
 //                previous = new HashMap<>(); // retract
 //                S = new HashSet<>();
-
+                String endP = null;
                 long dist = 0;//distance of from start to end + 1
                 chT = new HashSet<>();
                 contains = new HashMap<>();
@@ -129,6 +129,8 @@ public class Subway {
                     accD.remove(accD.first());
                     visited.add(Uni);
                     visiSta.add(match.get(Uni));
+                    if(visiSta.contains(match.get(end)))
+                        endP = Uni;
                     if (tempAdList.get(Uni) != null) {
                         for (Pair<String, Long> ele : tempAdList.get(Uni)) {
                             if (!visited.contains(ele.first())) {
@@ -141,9 +143,9 @@ public class Subway {
                                 } else if (o.first() - n.first() > 0) {
                                     accD.remove(o);
                                     accD.add(n);
-                                    contains.remove(ele.first());
+//                                    contains.remove(ele.first());
                                     contains.put(ele.first(), n);
-                                    comeFrom.remove(ele.first());
+//                                    comeFrom.remove(ele.first());
                                     comeFrom.put(ele.first(), Uni);
                                 }
                             }
@@ -161,15 +163,12 @@ public class Subway {
 
                 //print
                 StringBuilder out = new StringBuilder();
-                String where = end;//Unique
+                String where = endP;//Unique
                 String prewhere = null;
                 int prestart;
                 while (!match.get(where).equals(match.get(start))) {
-
-//                    System.out.println(match.get(where));
-
                     prestart = match.get(where).length() + 1;
-                    if (where.equals(end)) {
+                    if (where.equals(endP)) {
                         out.insert(0, match.get(where));
                     } else {
                         if (!match.get(where).equals(match.get(prewhere)))
@@ -194,6 +193,7 @@ public class Subway {
                 comeFrom.clear();
                 chT.clear();
                 visiSta.clear();
+
             }
             br.close();
             data.close();
