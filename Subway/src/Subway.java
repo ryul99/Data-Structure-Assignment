@@ -9,20 +9,17 @@ public class Subway {
         HashMap<String, LinkedList<String>> transfer = new HashMap<>();//<station, LinkedLIst<Unique>>
 //        SortedSet<Pair<Long, String>> accudis = new TreeSet<>();
 
-        HashSet<String> chT = new HashSet<>();//<Unique> transfer stations are in it
+//        int check = 0;// 0 is shortest distance, 1 is fewest transfer
+//        HashSet<String> chT = new HashSet<>();//<Unique> transfer stations are in it
         HashMap<String, Pair<Long, String>> contains;//<Unique, member of accD> / whether accD contains specific Unique or not
+        HashMap<String, Pair<Pair<Long, Long>, String>> containsT;//<Unique, member of accTD> / transfer version of contains
         HashMap<String, LinkedList<Pair<String, Long>>> tempAdList;//<Unique, LinkedList<Unique, distance>> / temporary
         HashSet<String> visited = new HashSet<>();//<Unique> / check whether Unique(station) is visited (visited Unique is in it)
         HashSet<String> visiSta = new HashSet<>();//station version of visited
         SortedSet<Pair<Long, String>> accD;//<accumulated distance, Unique> / starting point is 1. get real result by minus 1 from result / must reset each case
+        SortedSet<Pair<Pair<Long, Long>, String>> accTD;//<<accumulated transfer, accumulated distance>, Unique>
         HashMap<String, String> comeFrom = new HashMap<>();//<Unique1, Unique2> / Unique1 is comes from Unique2
         File file = new File(args[0]);
-
-//        HashMap<String, Long> d; // Unique, distance
-//        SortedSet<Pair<Long, String>> Q; // set of all vertices
-//        SortedSet<String> V = new TreeSet<>(); // set of all vertices
-//        HashMap<String, String> previous; // retract
-//        HashSet<String> S;
 
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -60,8 +57,6 @@ public class Subway {
                     transfer.put(inarr[1], a);
                 }
 
-//                V.add(inarr[0]);
-
             }
             while (true) {
                 String in = data.readLine();
@@ -80,23 +75,18 @@ public class Subway {
 
             while (true) {//every case
 
-//                d = new HashMap<>();
-//                Q = new TreeSet();
-//                previous = new HashMap<>(); // retract
-//                S = new HashSet<>();
+                int startingC = 0;//checking starting point is transfer 0 is not 1 is transfer
                 String endP = null;
                 long dist = 0;//distance of from start to end + 1
-                chT = new HashSet<>();
-                contains = new HashMap<>();
+//                chT = new HashSet<>();
                 visiSta = new HashSet<>();
                 visited = new HashSet<>();
                 comeFrom = new HashMap<>();
-                accD = new TreeSet<>();
-//                accD = (TreeSet<Pair<Long, String>>) ((TreeSet<Pair<Long,String>>) accudis).clone();
                 tempAdList = new HashMap<>();
-                for(HashMap.Entry<String, LinkedList<Pair<String, Long>>> entry : adjacencyList.entrySet()){
+
+                for (HashMap.Entry<String, LinkedList<Pair<String, Long>>> entry : adjacencyList.entrySet()) {
                     LinkedList<Pair<String, Long>> a = new LinkedList<>();
-                    for(Pair<String, Long> g : entry.getValue()) {
+                    for (Pair<String, Long> g : entry.getValue()) {
                         a.add(new Pair<>(g.first(), g.second()));
                     }
                     tempAdList.put(entry.getKey(), a);
@@ -109,11 +99,11 @@ public class Subway {
                 String[] inarr = in.split(" ");
                 String start = revmatch.get(inarr[0]);
                 String end = revmatch.get(inarr[1]);
-                accD.add(new Pair<>((long) 1, start));
                 if (transfer.get(inarr[0]).size() > 1) {//if starting station is transfer station
+                    startingC = 1;
                     for (String i : transfer.get(inarr[0])) {
                         for (String j : transfer.get(inarr[0])) {
-                            if(!i.equals(j)) {
+                            if (!i.equals(j)) {
                                 tempAdList.get(i).remove(new Pair<>(j, (long) 5));
                                 tempAdList.get(i).add(new Pair<>(j, (long) 0));
                             }
@@ -121,45 +111,84 @@ public class Subway {
                     }
                 }
 
-//                dijkstra
-                while (!visiSta.contains(match.get(end))) {
-                    Pair<Long, String> min = accD.first();
-                    dist = min.first();
-                    String Uni = min.second();
-                    accD.remove(accD.first());
-                    visited.add(Uni);
-                    visiSta.add(match.get(Uni));
-                    if(visiSta.contains(match.get(end)))
-                        endP = Uni;
-                    if (tempAdList.get(Uni) != null) {
-                        for (Pair<String, Long> ele : tempAdList.get(Uni)) {
-                            if (!visited.contains(ele.first())) {
-                                Pair<Long, String> o = contains.get(ele.first());
-                                Pair<Long, String> n = new Pair<>((dist + ele.second()), ele.first());
-                                if (o == null) {
-                                    accD.add(n);
-                                    contains.put(ele.first(), n);
-                                    comeFrom.put(ele.first(), Uni);
-                                } else if (o.first() - n.first() > 0) {
-                                    accD.remove(o);
-                                    accD.add(n);
+                //dijkstra
+                if (inarr.length == 3 && inarr[2].equals("!")) {//minimum transfer
+                    accTD = new TreeSet<>();
+                    containsT = new HashMap<>();
+                    accTD.add(new Pair<>(new Pair<>((long) 0, (long) 1), start));
+                    while (!visiSta.contains(match.get(end))) {
+                        int transfercheck;//0 is not transferring station, 1 is transferring station
+                        long tf = accTD.first().first().first();
+                        dist = accTD.first().first().second();
+                        String Uni = accTD.first().second();
+                        accTD.remove(accTD.first());
+                        visited.add(Uni);
+                        visiSta.add(match.get(Uni));
+                        if (visiSta.contains(match.get(end)))
+                            endP = Uni;
+                        if (tempAdList.get(Uni) != null) {
+                            for (Pair<String, Long> ele : tempAdList.get(Uni)) {
+                                transfercheck = 0;
+                                if (!visited.contains(ele.first())) {
+                                    Pair<Pair<Long, Long>, String> o = containsT.get(ele.first());
+                                    Pair<Pair<Long, Long>, String> n;
+                                    if (match.get(Uni).equals(match.get(ele.first())) && !Uni.equals(start))
+                                        transfercheck = 1;
+                                    if (transfercheck == 0)
+                                        n = new Pair<>(new Pair<>(tf, (dist + ele.second())), ele.first());
+                                    else
+                                        n = new Pair<>(new Pair<>(tf + 1, (dist + ele.second())), ele.first());
+                                    if (o == null) {
+                                        accTD.add(n);
+                                        containsT.put(ele.first(), n);
+                                        comeFrom.put(ele.first(), Uni);
+                                    } else if (o.first().compareTo(n.first()) > 0) {
+                                        accTD.remove(o);
+                                        accTD.add(n);
 //                                    contains.remove(ele.first());
-                                    contains.put(ele.first(), n);
+                                        containsT.put(ele.first(), n);
 //                                    comeFrom.remove(ele.first());
-                                    comeFrom.put(ele.first(), Uni);
+                                        comeFrom.put(ele.first(), Uni);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    accD = new TreeSet<>();
+                    contains = new HashMap<>();
+                    accD.add(new Pair<>((long) 1, start));
+                    while (!visiSta.contains(match.get(end))) {
+                        dist = accD.first().first();
+                        String Uni = accD.first().second();
+                        accD.remove(accD.first());
+                        visited.add(Uni);
+                        visiSta.add(match.get(Uni));
+                        if (visiSta.contains(match.get(end)))
+                            endP = Uni;
+                        if (tempAdList.get(Uni) != null) {
+                            for (Pair<String, Long> ele : tempAdList.get(Uni)) {
+                                if (!visited.contains(ele.first())) {
+                                    Pair<Long, String> o = contains.get(ele.first());
+                                    Pair<Long, String> n = new Pair<>((dist + ele.second()), ele.first());
+                                    if (o == null) {
+                                        accD.add(n);
+                                        contains.put(ele.first(), n);
+                                        comeFrom.put(ele.first(), Uni);
+                                    } else if (o.first() - n.first() > 0) {
+                                        accD.remove(o);
+                                        accD.add(n);
+//                                    contains.remove(ele.first());
+                                        contains.put(ele.first(), n);
+//                                    comeFrom.remove(ele.first());
+                                        comeFrom.put(ele.first(), Uni);
+                                    }
                                 }
                             }
                         }
                     }
                 }
 
-//                for(String i : V){
-//                    d.put(i, (long) 0);
-//                }
-//                Q = (TreeSet) ((TreeSet<String>) V).clone();
-//                while(!Q.isEmpty()) {
-//                    Q.
-//                }
 
                 //print
                 StringBuilder out = new StringBuilder();
@@ -173,7 +202,7 @@ public class Subway {
                     } else {
                         if (!match.get(where).equals(match.get(prewhere)))
                             out.insert(0, " ").insert(0, match.get(where));
-                        else if(!match.get(where).equals(match.get(end))) {
+                        else if (!match.get(where).equals(match.get(end))) {
                             out.delete(0, prestart);
                             out.insert(0, " ").insert(0, "]").insert(0, match.get(where)).insert(0, "[");
                         }
@@ -186,14 +215,15 @@ public class Subway {
                 System.out.println(dist - 1);
 
                 //refresh
-                tempAdList.clear();
-                contains.clear();
-                visited.clear();
-                accD.clear();
-                comeFrom.clear();
-                chT.clear();
-                visiSta.clear();
-
+//                tempAdList.clear();
+//                contains.clear();
+//                visited.clear();
+//                accD.clear();
+//                comeFrom.clear();
+//                chT.clear();
+//                visiSta.clear();
+//                accTD.clear();
+//                containsT.clear();
             }
             br.close();
             data.close();
